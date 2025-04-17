@@ -111,7 +111,7 @@
         function openModal(id, name, stock) {
             document.getElementById("produkNama").value = name;
             document.getElementById("produkStok").value = stock;
-            document.getElementById("updateStokForm").action = "/product" + "/update-stock" + id;
+            document.getElementById("updateStokForm").action = "/product/" + id + "/stock" ;
 
             const modal = document.getElementById("modalUpdateStok");
             const modalContent = document.getElementById("modalContent");

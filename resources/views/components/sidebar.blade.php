@@ -6,9 +6,9 @@
     <nav class="mt-5">
         <ul>
             <li class="mb-2">
-                <a href="#"
+                <a href="{{ route('dashboard') }}"
                     class="flex items-center p-3 rounded-lg
-                    {{ request()->routeIs('dashboard.admin') || request()->routeIs('dashboard.petugas') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-gray-200' }}">
+                    {{ request()->routeIs('dashboard') || request()->routeIs('dashboard.petugas') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-gray-200' }}">
                     <i class="fi fi-rr-home mr-3"></i>
                     Dashboard
                 </a>
@@ -16,15 +16,15 @@
             <li class="mb-2">
                 <a href="{{ route('product.index') }}"
                     class="flex items-center p-3 rounded-lg
-                   {{ request()->routeIs('produk.index') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-gray-200' }}">
+                   {{ request()->routeIs('product.index') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-gray-200' }}">
                     <i class="fi fi-rr-box mr-3"></i>
                     Produk
                 </a>
             </li>
             <li class="mb-2">
-                <a href="#"
+                <a href="{{ route('sales.index') }}"
                     class="flex items-center p-3 rounded-lg
-                   {{ request()->routeIs('penjualan.index') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-gray-200' }}">
+                   {{ request()->routeIs('sales.index') ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-gray-200' }}">
                     <i class="fi fi-rr-shopping-cart mr-3"></i>
                     Pembelian
                 </a>

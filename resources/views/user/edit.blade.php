@@ -12,7 +12,7 @@
             <h1 class="text-3xl font-bold text-gray-800">Edit User</h1>
         </div>
 
-        <form action="{{ route('user.update', $user->id }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('user.update', $user->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <div class="bg-white p-6 rounded shadow-md">

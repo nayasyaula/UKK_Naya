@@ -12,9 +12,9 @@
                     <path d="M9.75 6a2.25 2.25 0 0 1 4.5 0v.75h-4.5V6z" />
                     <path d="M4.5 9.75A2.25 2.25 0 0 1 6.75 7.5h10.5a2.25 2.25 0 0 1 2.25 2.25v9a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 18.75v-9z" />
                 </svg>
-                ambil nama user
+                {{ Auth::user()->name }}
             </a>
-            <form method="POST" action="#">
+            <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="w-full text-left flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100 border-t">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">

@@ -38,10 +38,6 @@
             text-align: right;
         }
 
-        .text-center {
-            text-align: center;
-        }
-
         .no-border {
             border: none !important;
         }
@@ -66,10 +62,15 @@
 <body onload="window.print()">
     <h2>FlexyLite</h2>
     <p>
-        Member Status : MEMBER<br>
-        No. HP : 081234567890<br>
-        Bergabung Sejak : 12 Januari 2024<br>
-        Poin Member : 50
+        Member Status : {{ $invoice->status_member === 'member' ? 'Member' : 'NON-MEMBER' }}<br>
+        No. HP : {{ $invoice->member->telp ?? '000' }}<br>
+        @if ($invoice->status_member === 'member')
+            Bergabung Sejak : {{ \Carbon\Carbon::parse($invoice->created_at)->translatedFormat('d F Y') }}
+        @else
+            Bergabung Sejak: -
+        @endif
+        <br>
+        Poin Member : {{ $invoice->member->poin ?? 0 }}
     </p>
 
     <table>
@@ -82,47 +83,47 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>Produk A</td>
-                <td class="text-center">2</td>
-                <td class="text-right">Rp. 10.000</td>
-                <td class="text-right">Rp. 20.000</td>
-            </tr>
-            <tr>
-                <td>Produk B</td>
-                <td class="text-center">1</td>
-                <td class="text-right">Rp. 15.000</td>
-                <td class="text-right">Rp. 15.000</td>
-            </tr>
+            @foreach ($invoice->detailPenjualans as $item)
+                <tr>
+                    <td>{{ $item->produk->produk }}</td>
+                    <td class="text-center">{{ $item->qty }}</td>
+                    <td class="text-right">Rp. {{ number_format($item->produk->harga, 0, ',', '.') }}</td>
+                    <td class="text-right">Rp. {{ number_format($item->produk->harga * $item->qty, 0, ',', '.') }}</td>
+                </tr>
+            @endforeach
         </tbody>
     </table>
 
     <table class="summary">
         <tr>
             <td class="no-border">Total Harga</td>
-            <td class="no-border text-right"><strong>Rp. 35.000</strong></td>
+            <td class="no-border text-right"><strong>Rp.
+                    {{ number_format($invoice->total_harga, 0, ',', '.') }}</strong></td>
         </tr>
         <tr>
             <td class="no-border">Total Bayar</td>
-            <td class="no-border text-right"><strong>Rp. 40.000</strong></td>
+            <td class="no-border text-right"><strong>Rp.
+                    {{ number_format($invoice->total_bayar ?? 0, 0, ',', '.') }}</strong></td>
         </tr>
         <tr>
             <td class="no-border">Poin Digunakan</td>
-            <td class="no-border text-right">10</td>
+            <td class="no-border text-right">{{ $invoice->poin_digunakan ?? 0 }}</td>
         </tr>
         <tr>
             <td class="no-border">Harga Setelah Poin</td>
-            <td class="no-border text-right">Rp. 25.000</td>
+            <td class="no-border text-right">Rp. {{ number_format($invoice->harga_setelah_poin ?? 0, 0, ',', '.') }}
+            </td>
         </tr>
         <tr>
             <td class="no-border">Total Kembalian</td>
-            <td class="no-border text-right"><strong>Rp. 15.000</strong></td>
+            <td class="no-border text-right"><strong>Rp.
+                    {{ number_format($invoice->kembalian ?? 0, 0, ',', '.') }}</strong></td>
         </tr>
     </table>
 
     <div class="footer">
         <p>
-            2024-01-12 14:32:01 | Admin<br>
+            {{ $invoice->created_at }} | {{ $invoice->user->name }}<br>
             <strong>Terima kasih atas pembelian Anda!</strong>
         </p>
     </div>

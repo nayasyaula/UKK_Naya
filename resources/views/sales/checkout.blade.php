@@ -8,31 +8,34 @@
             <a href="#" class="hover:underline">Home</a> / <span class="text-gray-700 font-medium">Penjualan</span>
         </nav>
 
-        <form action="#" method="POST">
+        <form action="{{ route('sales.process.member') }}" method="POST">
             @csrf
             <div class="flex flex-col md:flex-row gap-6">
                 <div class="md:w-1/2 bg-white p-6 rounded shadow">
                     <h1 class="text-xl font-semibold text-gray-900 mb-4">Produk yang dipilih</h1>
 
-                    <div class="flex justify-between items-center text-gray-800 mb-1">
-                        <div class="text-sm font-medium">Nama Produk</div>
-                        <div class="text-sm font-semibold">Rp. 0</div>
-                    </div>
-                    <div class="text-sm text-gray-500 mb-4">
-                        Rp. 0 x 0
-                    </div>
+                    @foreach ($orders as $item)
+                        <div class="flex justify-between items-center text-gray-800 mb-1">
+                            <div class="text-sm font-medium">{{ $item['product']->name }}</div>
+                            <div class="text-sm font-semibold">Rp. {{ number_format($item['subtotal'], 0, ',', '.') }}</div>
+                        </div>
+                        <div class="text-sm text-gray-500 mb-4">
+                            Rp. {{ number_format($item['product']->price, 0, ',', '.') }} x {{ $item['quantity'] }}
+                        </div>
 
-                    <input type="hidden" name="orders[0][product_id]" value="">
-                    <input type="hidden" name="orders[0][quantity]" value="">
-                    <input type="hidden" name="orders[0][subtotal]" value="">
+                        <input type="hidden" name="orders[{{ $loop->index }}][product_id]" value="{{ $item['product']->id }}">
+                        <input type="hidden" name="orders[{{ $loop->index }}][quantity]" value="{{ $item['quantity'] }}">
+                        <input type="hidden" name="orders[{{ $loop->index }}][subtotal]" value="{{ $item['subtotal'] }}">
+                    @endforeach
 
                     <div class="flex justify-between items-center mt-6 border-t pt-4 text-gray-700 font-semibold text-lg">
                         <span>Total Harga</span>
-                        <span>Rp. 0</span>
+                        <span>Rp. {{ number_format($totalPrice, 0, ',', '.') }}</span>
                     </div>
 
-                    <input type="hidden" name="total_price" value="0">
+                    <input type="hidden" name="total_price" value="{{ $totalPrice }}">
                 </div>
+
 
                 <div class="md:w-1/2 bg-white p-6 rounded shadow space-y-4">
                     <div>
@@ -71,6 +74,7 @@
                             Lanjutkan
                         </button>
                     </div>
+
                 </div>
             </div>
         </form>
@@ -104,24 +108,26 @@
             el.value = 'Rp ' + rupiah + (split[1] !== undefined ? ',' + split[1] : '');
         }
 
-        const totalPrice = 0;
+        const totalPrice = {{ $totalPrice }};
         const inputPaid = document.getElementById('total_paid');
         const errorText = document.getElementById('error-text');
         const submitBtn = document.getElementById('submit-btn');
 
         function unformatRupiah(value) {
-            return parseInt(value.replace(/[^0-9]/g, ''), 10);
+            return parseInt(value.replace(/[^0-9]/g, ''), 10); // Menghapus semua karakter yang bukan angka
         }
 
         function validatePayment() {
-            const paid = unformatRupiah(inputPaid.value);
-            if (paid >= totalPrice) {
-                errorText.classList.add('hidden');
-                submitBtn.disabled = false;
+            const paid = unformatRupiah(inputPaid.value); // Ubah nilai bayar ke angka
+            const totalPriceValue = totalPrice; // Total harga yang sebenarnya (angka asli)
+
+            if (paid >= totalPriceValue) {
+                errorText.classList.add('hidden'); // Sembunyikan error jika valid
+                submitBtn.disabled = false; // Aktifkan tombol
                 submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
             } else {
-                errorText.classList.remove('hidden');
-                submitBtn.disabled = true;
+                errorText.classList.remove('hidden'); // Tampilkan error jika kurang
+                submitBtn.disabled = true; // Nonaktifkan tombol
                 submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
             }
         }

@@ -61,8 +61,9 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Product $product)
+    public function edit(Product $product, $id)
     {
+        $product = Product::findOrFail($id);
         return view('product.edit', compact('product'));
     }
 
@@ -111,13 +112,14 @@ class ProductController extends Controller
 
     public function updateStok(Request $request, $id)
     {
+        $product = Product::findOrFail($id);
+
         $request->validate([
-            'stok' => 'required|integer|min:0'
+            'stock' => 'required|integer|min:0'
         ]);
 
-        $product = Product::findOrFail($id);
-        $product->stok = $request->stok;
-        $product->save();
+        $product->stock = $request->stock;
+        $product->update();
 
         return redirect()->route('product.index')->with('success', 'Stok produk berhasil diperbarui.');
     }
